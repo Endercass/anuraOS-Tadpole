@@ -10,7 +10,7 @@
     "height": "600px"
   },
   "x-anura.tadpole": {
-    "entrypoint": "HelloPage",
+    "entrypoint": "PlainHelloPage",
     "blocks-enabled": false
   }
 }
