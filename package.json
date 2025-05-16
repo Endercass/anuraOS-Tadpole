@@ -5,10 +5,13 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build-rt": "cd tadpole-rt && rollup -c rollup.config.js"
+    "build-rt": "cd tadpole-rt && esbuild src/index.jsx --bundle --outfile=dist/tadpole-rt.js --target=esnext --format=esm --jsx=transform --jsx-factory=h --jsx-fragment=Fragment --minify"
   },
   "keywords": [],
   "author": "Endercass",
   "license": "MIT",
-  "packageManager": "pnpm@10.10.0"
+  "packageManager": "pnpm@10.10.0",
+  "devDependencies": {
+    "esbuild": "^0.25.4"
+  }
 }
