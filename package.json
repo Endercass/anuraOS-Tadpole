@@ -15,5 +15,8 @@
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "esbuild": "^0.25.4"
+  },
+  "dependencies": {
+    "esbuild-wasm": "^0.25.4"
   }
 }
