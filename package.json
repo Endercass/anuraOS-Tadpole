@@ -1,0 +1,14 @@
+{
+  "name": "anuraos-tadpole",
+  "version": "0.1.0",
+  "description": "An education environment for anuraOS",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build-rt": "cd tadpole-rt && rollup -c rollup.config.js"
+  },
+  "keywords": [],
+  "author": "Endercass",
+  "license": "MIT",
+  "packageManager": "pnpm@10.10.0"
+}
