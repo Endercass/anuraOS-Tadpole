@@ -1,0 +1,16 @@
+{
+  "name": "Hello World App",
+  "type": "auto",
+  "package": "anura.tadpole.johndoe.helloworld",
+  "index": "tadpole.html",
+  "icon": "icon.png",
+  "wininfo": {
+    "title": "Hello World App",
+    "width": "800px",
+    "height": "600px"
+  },
+  "x-anura.tadpole": {
+    "entrypoint": "HelloPage",
+    "blocks-enabled": false
+  }
+}

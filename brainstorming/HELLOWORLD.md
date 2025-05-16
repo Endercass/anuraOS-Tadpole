@@ -54,23 +54,23 @@ src
 
 ### File Structure | `./src/components/`
 
-This directory contains the components for the application. Each component should be in its own file and should follow the naming convention of `ComponentName.js`. The components should be written in JavaScript and should export a default function that returns a dreamland element. The components should also export a name variable that is used to register the component with the component registry. See [Components](#components) for more information.
+This directory contains the components for the application. Each component should be in its own file and should follow the naming convention of `ComponentName.jsx`. The components should be written in JavaScript and should export a default function that returns a dreamland element. The components should also export a name variable that is used to register the component with the component registry. See [Components](#components) for more information.
 
 ```
 components
-├── HelloDescription.js
-└── HelloPage.js
+├── HelloDescription.jsx
+└── HelloPage.jsx
 ```
 
 ## Components
 
 Components are the building blocks of an anuraOS Tadpole application, as well as the modern web. For the tadpole environment, we will be using the [dreamland](https://dreamland.js.org) framework to create components, which is the same framework that anuraOS uses. While the component system is identical to standard dreamland, we will be wrapping things with a custom module loader that will allow for a more seamless integration with visual programming components.
 
-### Component | `./src/components/HelloDescription.js`
+### Component | `./src/components/HelloDescription.jsx`
 
 This component is a simple description of the application. It is a functional component that returns a paragraph element with some text.
 
-```javascript
+```jsx
 export const name = "HelloDescription";
 
 export default function HelloDescription() {
@@ -82,11 +82,11 @@ export default function HelloDescription() {
 }
 ```
 
-### Component | `./src/components/HelloPage.js`
+### Component | `./src/components/HelloPage.jsx`
 
 This component is the main page of the application. It imports the `HelloDescription` component and renders it inside a div element. The `HelloPage` component is the entry point for the application and will be specified in the app manifest.
 
-```javascript
+```jsx
 const HelloDescription = await getComponent("HelloDescription");
 
 export const name = "HelloPage";
