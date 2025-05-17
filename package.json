@@ -7,7 +7,9 @@
   "scripts": {
     "build-rt": "esbuild tadpole-rt/src/index.jsx --bundle --outfile=dist/tadpole-rt.js --target=esnext --format=esm --jsx=transform --jsx-factory=h --jsx-fragment=Fragment --minify",
     "build-template": "node build-template.js",
-    "build": "pnpm build-rt && pnpm build-template"
+    "build-editor-script": "esbuild editor/src/index.jsx --bundle --outfile=dist/editor-script.js --target=esnext --format=esm --jsx=transform --jsx-factory=h --jsx-fragment=Fragment --minify",
+    "build-editor": "node build-editor.js",
+    "build": "pnpm build-rt && pnpm build-template && pnpm build-editor-script && pnpm build-editor"
   },
   "keywords": [],
   "author": "Endercass",
@@ -17,6 +19,7 @@
     "esbuild": "^0.25.4"
   },
   "dependencies": {
+    "blockly": "^12.0.0",
     "esbuild-wasm": "^0.25.4"
   }
 }
