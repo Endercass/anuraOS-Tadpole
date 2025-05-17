@@ -69,20 +69,17 @@ export const componentFunctionRef = {
 export const elementBlock = {
   init: function () {
     this.attributes = [];
-    this.tagName = "div";
-
-    // this.appendDummyInput("TAG_LINE")
-    //   .appendField("Element with tag")
-    //   .appendField(new Blockly.FieldTextInput(this.tagName), "TAGNAME");
+    this.children = [];
     this.appendValueInput("TAG")
       .setCheck(["String", "ComponentFunction"])
       .appendField("Element with tag");
-
     this.updateShape();
-
     this.setOutput(true, "HTMLElement");
     this.setMutator(
-      new Blockly.icons.MutatorIcon(["element_attribute_item"], this),
+      new Blockly.icons.MutatorIcon(
+        ["element_attribute_item", "element_child_item"],
+        this,
+      ),
     );
     this.setColour(225);
   },
@@ -90,98 +87,144 @@ export const elementBlock = {
   saveExtraState: function () {
     return {
       attributes: this.attributes,
+      children: this.children.length,
     };
   },
 
   loadExtraState: function (state) {
     this.attributes = state.attributes || [];
+    this.children = new Array(state.children || 0).fill(null);
     this.updateShape();
   },
 
   decompose: function (workspace) {
-    const containerBlock = workspace.newBlock("element_container");
-    containerBlock.initSvg();
-    containerBlock.setFieldValue(this.getFieldValue("TAGNAME"), "TAGNAME");
+    const container = workspace.newBlock("element_container");
+    container.initSvg();
+    container.setFieldValue(this.getFieldValue("TAG") || "div", "TAGNAME");
 
-    let connection = containerBlock.getInput("STACK").connection;
+    let attrConn = container.getInput("ATTR_STACK").connection;
+    this.attributes.forEach((attr) => {
+      const item = workspace.newBlock("element_attribute_item");
+      item.initSvg();
+      item.setFieldValue(attr, "NAME");
+      attrConn.connect(item.previousConnection);
+      attrConn = item.nextConnection;
+    });
 
-    for (const attr of this.attributes) {
-      const itemBlock = workspace.newBlock("element_attribute_item");
-      itemBlock.initSvg();
-      itemBlock.setFieldValue(attr, "NAME");
-      connection.connect(itemBlock.previousConnection);
-      connection = itemBlock.nextConnection;
-    }
+    let childConn = container.getInput("CHILD_STACK").connection;
+    this.children.forEach(() => {
+      const childItem = workspace.newBlock("element_child_item");
+      childItem.initSvg();
+      // restore any saved connection
+      childItem.valueConnection_ = null;
+      childConn.connect(childItem.previousConnection);
+      childConn = childItem.nextConnection;
+    });
 
-    return containerBlock;
+    return container;
   },
 
-  compose: function (containerBlock) {
-    let itemBlock = containerBlock.getInputTargetBlock("STACK");
-    const newAttributes = [];
-    const connections = [];
-
-    while (itemBlock) {
-      const name = itemBlock.getFieldValue("NAME");
-      newAttributes.push(name);
-      connections.push(itemBlock.valueConnection_);
-      itemBlock =
-        itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
+  compose: function (container) {
+    // ATTRIBUTES
+    let item = container.getInputTargetBlock("ATTR_STACK");
+    const newAttrs = [],
+      attrConns = [];
+    while (item) {
+      newAttrs.push(item.getFieldValue("NAME"));
+      attrConns.push(item.valueConnection_);
+      item = item.nextConnection && item.nextConnection.targetBlock();
     }
-    for (let i = 0; i < this.attributes.length; i++) {
-      const input = this.getInput("ATTR_" + i);
-      if (input && input.connection && input.connection.targetConnection) {
-        input.connection.targetConnection.disconnect();
-      }
+    // CHILDREN
+    item = container.getInputTargetBlock("CHILD_STACK");
+    const newChildren = [],
+      childConns = [];
+    while (item) {
+      newChildren.push(null);
+      childConns.push(item.valueConnection_);
+      item = item.nextConnection && item.nextConnection.targetBlock();
     }
 
-    this.attributes = newAttributes;
+    // disconnect old attr/value inputs
+    this.attributes.forEach((_, i) => {
+      const inp = this.getInput("ATTR_" + i);
+      if (inp && inp.connection.targetConnection)
+        inp.connection.targetConnection.disconnect();
+    });
+    // disconnect old child inputs
+    this.children.forEach((_, i) => {
+      const inp = this.getInput("CHILD_" + i);
+      if (inp && inp.connection.targetConnection)
+        inp.connection.targetConnection.disconnect();
+    });
+
+    this.attributes = newAttrs;
+    this.children = newChildren;
     this.updateShape();
 
-    // Reconnect preserved connections
-    for (let i = 0; i < this.attributes.length; i++) {
-      if (connections[i]) {
-        connections[i].reconnect(this, "ATTR_" + i);
-      }
-    }
+    // reconnect attribute values
+    attrConns.forEach((conn, i) => conn && conn.reconnect(this, "ATTR_" + i));
+    // reconnect child values
+    childConns.forEach((conn, i) => conn && conn.reconnect(this, "CHILD_" + i));
   },
 
-  saveConnections: function (containerBlock) {
-    let itemBlock = containerBlock.getInputTargetBlock("STACK");
-    let i = 0;
-    while (itemBlock) {
-      const input = this.getInput("ATTR_" + i);
-      if (input && input.connection) {
-        itemBlock.valueConnection_ = input.connection.targetConnection;
-      }
-      itemBlock =
-        itemBlock.nextConnection && itemBlock.nextConnection.targetBlock();
+  saveConnections: function (container) {
+    let item = container.getInputTargetBlock("ATTR_STACK"),
+      i = 0;
+    while (item) {
+      const inp = this.getInput("ATTR_" + i);
+      if (inp) item.valueConnection_ = inp.connection.targetConnection;
+      item = item.nextConnection && item.nextConnection.targetBlock();
+      i++;
+    }
+    item = container.getInputTargetBlock("CHILD_STACK");
+    i = 0;
+    while (item) {
+      const inp = this.getInput("CHILD_" + i);
+      if (inp) item.valueConnection_ = inp.connection.targetConnection;
+      item = item.nextConnection && item.nextConnection.targetBlock();
       i++;
     }
   },
 
   updateShape: function () {
+    // remove old attribute inputs
     let i = 0;
     while (this.getInput("ATTR_" + i)) {
       this.removeInput("ATTR_" + i);
       i++;
     }
-
-    for (let i = 0; i < this.attributes.length; i++) {
-      const input = this.appendValueInput("ATTR_" + i).setCheck("String");
-      input.appendField(this.attributes[i]);
+    // remove old child inputs
+    i = 0;
+    while (this.getInput("CHILD_" + i)) {
+      this.removeInput("CHILD_" + i);
+      i++;
     }
+
+    // re-add attribute inputs
+    this.attributes.forEach((name, idx) => {
+      const inp = this.appendValueInput("ATTR_" + idx).setCheck("String");
+      inp.appendField(name);
+    });
+
+    // re-add child inputs
+    this.children.forEach((_, idx) => {
+      this.appendValueInput("CHILD_" + idx)
+        .setCheck(["String", "HTMLElement"])
+        .appendField("child");
+    });
   },
 };
+
 export const elementContainerBlock = {
   init: function () {
     this.setColour(225);
-    this.appendDummyInput("TAGNAME")
+    this.appendDummyInput("TAGLINE")
       .appendField("Element with tag")
-      .appendField(new Blockly.FieldLabelSerializable("div"), "TAGNAME");
-    this.appendStatementInput("STACK").setCheck(null);
-    this.setTooltip("Add attributes for this element.");
-    this.setHelpUrl("");
+      .appendField(new Blockly.FieldLabelSerializable(""), "TAGNAME");
+    this.appendStatementInput("ATTR_STACK").setCheck("element_attribute_item");
+    this.appendDummyInput().appendField("Children:");
+    this.appendStatementInput("CHILD_STACK").setCheck("element_child_item");
+    this.setTooltip("Add attributes and children");
   },
 };
 
@@ -198,10 +241,21 @@ export const elementAttributeItemBlock = {
   },
 };
 
+export const elementChildItemBlock = {
+  init: function () {
+    this.setColour(225);
+    this.appendDummyInput().appendField("Child");
+    // this.valueConnection_ will hold the connected child's connection
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+  },
+};
+
 export default {
   element_block: elementBlock,
   element_container: elementContainerBlock,
   element_attribute_item: elementAttributeItemBlock,
   element_attribute_item_block: elementAttributeItemBlock,
   component_function_ref: componentFunctionRef,
+  element_child_item: elementChildItemBlock,
 };
