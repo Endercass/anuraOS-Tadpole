@@ -1,4 +1,5 @@
 import * as Blockly from "blockly/core";
+import { javascriptGenerator, Order } from "blockly/javascript";
 
 class FieldFunctionDropdown extends Blockly.FieldDropdown {
   constructor(workspace) {
@@ -78,8 +79,8 @@ export const elementBlock = {
     this.setMutator(
       new Blockly.icons.MutatorIcon(
         ["element_attribute_item", "element_child_item"],
-        this,
-      ),
+        this
+      )
     );
     this.setColour(225);
   },
@@ -251,11 +252,48 @@ export const elementChildItemBlock = {
   },
 };
 
-export default {
+export function elementBlockJS(block) {
+  let tagCode = javascriptGenerator.valueToCode(block, "TAG", Order.NONE);
+  if (!tagCode) tagCode = '"div"';
+
+  const attrs = [];
+  for (let i = 0; i < block.attributes.length; i++) {
+    const name = block.attributes[i];
+    const val =
+      javascriptGenerator.valueToCode(block, "ATTR_" + i, Order.NONE) || '""';
+    attrs.push(`${JSON.stringify(name)}: ${val}`);
+  }
+  const attrObject = `{ ${attrs.join(", ")} }`;
+
+  const kids = [];
+  for (let i = 0; i < (block.children || []).length; i++) {
+    const childCode =
+      javascriptGenerator.valueToCode(block, "CHILD_" + i, Order.NONE) || '""';
+    kids.push(childCode);
+  }
+
+  const allArgs = [tagCode, attrObject].concat(kids);
+  const code = `h(${allArgs.join(", ")})`;
+
+  return [code, Order.FUNCTION_CALL];
+}
+
+export function componentFunctionRefJS(block) {
+  const funcName = block.getFieldValue("FUNC_NAME");
+  // Just output the function name as identifier (no quotes)
+  return [funcName || "undefined", Order.ATOMIC];
+}
+
+export const defs = {
   element_block: elementBlock,
   element_container: elementContainerBlock,
   element_attribute_item: elementAttributeItemBlock,
   element_attribute_item_block: elementAttributeItemBlock,
   component_function_ref: componentFunctionRef,
   element_child_item: elementChildItemBlock,
+};
+
+export const js = {
+  element_block: elementBlockJS,
+  component_function_ref: componentFunctionRefJS,
 };

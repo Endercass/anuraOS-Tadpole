@@ -1,41 +1,10 @@
 import BlocklyComponent from "./BlocklyDiv";
 import * as Blockly from "blockly/core";
 import { javascriptGenerator, Order } from "blockly/javascript";
-import defs from "./blocks";
+import { defs, js } from "../../dreamland-blocks/index";
 
 Blockly.common.defineBlocks(defs);
-
-javascriptGenerator.forBlock["element_block"] = function (block) {
-  let tagCode = javascriptGenerator.valueToCode(block, "TAG", Order.NONE);
-  if (!tagCode) tagCode = '"div"';
-
-  const attrs = [];
-  for (let i = 0; i < block.attributes.length; i++) {
-    const name = block.attributes[i];
-    const val =
-      javascriptGenerator.valueToCode(block, "ATTR_" + i, Order.NONE) || '""';
-    attrs.push(`${JSON.stringify(name)}: ${val}`);
-  }
-  const attrObject = `{ ${attrs.join(", ")} }`;
-
-  const kids = [];
-  for (let i = 0; i < (block.children || []).length; i++) {
-    const childCode =
-      javascriptGenerator.valueToCode(block, "CHILD_" + i, Order.NONE) || '""';
-    kids.push(childCode);
-  }
-
-  const allArgs = [tagCode, attrObject].concat(kids);
-  const code = `h(${allArgs.join(", ")})`;
-
-  return [code, Order.FUNCTION_CALL];
-};
-
-javascriptGenerator.forBlock["component_function_ref"] = function (block) {
-  const funcName = block.getFieldValue("FUNC_NAME");
-  // Just output the function name as identifier (no quotes)
-  return [funcName || "undefined", Order.ATOMIC];
-};
+Object.assign(javascriptGenerator.forBlock, js);
 
 function App() {
   this.css = `
