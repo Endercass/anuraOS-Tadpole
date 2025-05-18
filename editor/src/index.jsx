@@ -1,6 +1,6 @@
 import BlocklyComponent from "./BlocklyDiv";
 import * as Blockly from "blockly/core";
-import { javascriptGenerator, Order } from "blockly/javascript";
+import { javascriptGenerator } from "blockly/javascript";
 import { defs, js } from "../../dreamland-blocks/index";
 
 Blockly.common.defineBlocks(defs);

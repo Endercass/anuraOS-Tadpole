@@ -7,11 +7,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SRC = join(__dirname, "template");
 const DEST = join(__dirname, "dist", "template");
 const RUNTIME = join(__dirname, "dist", "tadpole-rt.js");
+const BLOCK_RUNTIME = join(__dirname, "dist", "block-rt.js");
 const ESBUILD_WASM = join(
   __dirname,
   "node_modules",
   "esbuild-wasm",
-  "esbuild.wasm",
+  "esbuild.wasm"
 );
 
 if (existsSync(DEST)) await rm(DEST, { recursive: true });
@@ -30,6 +31,7 @@ const copyDir = async (src, dest) => {
 
 await copyDir(SRC, DEST);
 await copyFile(RUNTIME, join(DEST, "tadpole-rt.js"));
+await copyFile(BLOCK_RUNTIME, join(DEST, "block-rt.js"));
 await copyFile(ESBUILD_WASM, join(DEST, "esbuild.wasm"));
 
 console.log("✨ Template created (dist/template/)");

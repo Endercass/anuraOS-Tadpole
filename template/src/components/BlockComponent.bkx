@@ -1,0 +1,45 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "element_block",
+        "id": "qKSJ:*$a0HRE9A%M-1rK",
+        "x": -23,
+        "y": 108,
+        "extraState": {
+          "attributes": [],
+          "children": 0
+        },
+        "inputs": {
+          "TAG": {
+            "block": {
+              "type": "component_function_ref",
+              "id": "Wur?UHKAZ=qU#UY#,N{~",
+              "fields": {
+                "FUNC_NAME": "BlockComponent"
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "procedures_defreturn",
+        "id": "~jM8d~Nr{!wK6eu7-VSZ",
+        "x": 81,
+        "y": 202,
+        "icons": {
+          "comment": {
+            "text": "Describe this function...",
+            "pinned": false,
+            "height": 80,
+            "width": 160
+          }
+        },
+        "fields": {
+          "NAME": "BlockComponent"
+        }
+      }
+    ]
+  }
+}

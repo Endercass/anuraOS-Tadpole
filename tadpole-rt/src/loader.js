@@ -1,4 +1,5 @@
 import { basepath, components } from "./paths";
+import { modules } from "./externs.js";
 import { compile } from "./compiler.js";
 import { registerComponent } from "./registry.js";
 
@@ -15,7 +16,7 @@ class ComponentLoader {
       }
     } catch (_) {
       console.info(
-        "[INFO] <tadpole-rt> No code components found. This can be ignored if this is a block-only app.",
+        "[INFO] <tadpole-rt> No code components found. This can be ignored if this is a block-only app."
       );
       return;
     }
@@ -35,12 +36,12 @@ class ComponentLoader {
             registerComponent(load.name, load.component);
           } else {
             console.warn(
-              `[WARNING] <tadpole-rt> Component ${load.path} does not export a default component. It will not be registered.`,
+              `[WARNING] <tadpole-rt> Component ${load.path} does not export a default component. It will not be registered.`
             );
           }
         } catch (e) {
           console.error(
-            `[ERROR] <tadpole-rt> Failed to load component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`,
+            `[ERROR] <tadpole-rt> Failed to load component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`
           );
           load.error = e;
         }
@@ -48,14 +49,14 @@ class ComponentLoader {
         try {
           const code = (
             await anura.fs.promises.readFile(
-              basepath + "/src/components/" + load.path,
+              basepath + "/src/components/" + load.path
             )
           ).toString();
 
           const compiled = await compile(code);
 
           const url = URL.createObjectURL(
-            new Blob([compiled], { type: "application/javascript" }),
+            new Blob([compiled], { type: "application/javascript" })
           );
 
           const mod = await import(url);
@@ -69,14 +70,29 @@ class ComponentLoader {
             registerComponent(load.name, load.component);
           } else {
             console.warn(
-              `[WARNING] <tadpole-rt> Component ${load.path} does not export a default component. It will not be registered.`,
+              `[WARNING] <tadpole-rt> Component ${load.path} does not export a default component. It will not be registered.`
             );
           }
         } catch (e) {
           console.error(
-            `[ERROR] <tadpole-rt> Failed to load component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`,
+            `[ERROR] <tadpole-rt> Failed to load component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`
           );
           load.error = e;
+        }
+      }
+      for (const mod of modules) {
+        if (
+          mod.extensions &&
+          mod.extensions.some((ext) => load.path.endsWith(ext))
+        ) {
+          try {
+            await mod.handle(basepath, load);
+          } catch (e) {
+            console.error(
+              `[ERROR] <tadpole-rt> Failed to load component ${load.name} with extension ${mod.path}: ${e}\nThis is not a fatal error, but the component will not be available.`
+            );
+            load.error = e;
+          }
         }
       }
     }

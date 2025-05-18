@@ -11,6 +11,6 @@
   },
   "x-anura.tadpole": {
     "entrypoint": "AppCompiled",
-    "blocks-enabled": false
+    "blocks-enabled": true
   }
 }
