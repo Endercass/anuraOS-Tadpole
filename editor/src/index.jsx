@@ -150,9 +150,13 @@ function App() {
               <mutation items="3"></mutation>
             </block>
           </category>
+          <category name="Modules" colour="290">
+            <block type="export_var_block"></block>
+            <block type="export_const_block"></block>
+          </category>
         </BlocklyComponent>
       </div>
-      <div class="preview-panel">
+      <div class="preview-panel" style="color: #fff;">
         <iframe src="about:blank" />
         <pre class="preview-code"></pre>
       </div>

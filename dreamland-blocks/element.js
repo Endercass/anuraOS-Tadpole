@@ -1,72 +1,6 @@
 import * as Blockly from "blockly/core";
 import { javascriptGenerator, Order } from "blockly/javascript";
 
-class FieldFunctionDropdown extends Blockly.FieldDropdown {
-  constructor(workspace) {
-    super(() => {
-      if (!workspace) return [["<no functions>", ""]];
-
-      const [proceduresNoReturn, proceduresWithReturn] =
-        Blockly.Procedures.allProcedures(workspace);
-      const allProcedures = proceduresNoReturn.concat(proceduresWithReturn);
-
-      const blocks = workspace.getAllBlocks(false);
-      const nameManager = new Blockly.Names();
-
-      allProcedures.forEach(([procName]) => {
-        const procBlock = blocks.find((b) => {
-          if (!b.getFieldValue) return false;
-          if (
-            b.type !== "procedures_defnoreturn" &&
-            b.type !== "procedures_defreturn"
-          )
-            return false;
-          return b.getFieldValue("NAME") === procName;
-        });
-
-        const legalName = procBlock
-          ? Blockly.Procedures.findLegalName(procName, procBlock)
-          : procName;
-
-        nameManager.getName(legalName, Blockly.Names.NameType.PROCEDURE);
-      });
-
-      // Then create options with sanitized safe names
-      const options = allProcedures.map(([procName]) => {
-        const procBlock = blocks.find((b) => {
-          if (!b.getFieldValue) return false;
-          if (
-            b.type !== "procedures_defnoreturn" &&
-            b.type !== "procedures_defreturn"
-          )
-            return false;
-          return b.getFieldValue("NAME") === procName;
-        });
-
-        const legalName = procBlock
-          ? Blockly.Procedures.findLegalName(procName, procBlock)
-          : procName;
-
-        const safeName = nameManager.safeName(legalName);
-
-        return [procName, safeName]; // show original name, store sanitized safe name
-      });
-
-      return options.length > 0 ? options : [["<no functions>", ""]];
-    });
-  }
-}
-
-export const componentFunctionRef = {
-  init: function () {
-    this.appendDummyInput()
-      .appendField("Component function named:")
-      .appendField(new FieldFunctionDropdown(this.workspace), "FUNC_NAME");
-    this.setOutput(true, "ComponentFunction");
-    this.setColour(230);
-  },
-};
-
 export const elementBlock = {
   init: function () {
     this.attributes = [];
@@ -278,22 +212,14 @@ export function elementBlockJS(block) {
   return [code, Order.FUNCTION_CALL];
 }
 
-export function componentFunctionRefJS(block) {
-  const funcName = block.getFieldValue("FUNC_NAME");
-  // Just output the function name as identifier (no quotes)
-  return [funcName || "undefined", Order.ATOMIC];
-}
-
 export const defs = {
   element_block: elementBlock,
   element_container: elementContainerBlock,
   element_attribute_item: elementAttributeItemBlock,
   element_attribute_item_block: elementAttributeItemBlock,
-  component_function_ref: componentFunctionRef,
   element_child_item: elementChildItemBlock,
 };
 
 export const js = {
   element_block: elementBlockJS,
-  component_function_ref: componentFunctionRefJS,
 };
