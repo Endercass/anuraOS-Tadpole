@@ -1,0 +1,138 @@
+{
+    "blocks": {
+        "languageVersion": 0,
+        "blocks": [
+            {
+                "type": "procedures_defreturn",
+                "id": "Z[]?[4^(-^-)W~cffnhf",
+                "x": 130,
+                "y": 85,
+                "icons": {
+                    "comment": {
+                        "text": "Describe this function...",
+                        "pinned": false,
+                        "height": 80,
+                        "width": 160
+                    }
+                },
+                "fields": {
+                    "NAME": "AppBlock"
+                },
+                "inputs": {
+                    "RETURN": {
+                        "block": {
+                            "type": "element_block",
+                            "id": "%]5Utea|Njl+a?2NqZrp",
+                            "extraState": {
+                                "attributes": [
+                                    "style"
+                                ],
+                                "children": 2
+                            },
+                            "inputs": {
+                                "TAG": {
+                                    "block": {
+                                        "type": "text",
+                                        "id": "SAhenR2iV!^|p:Y~gQSz",
+                                        "fields": {
+                                            "TEXT": "div"
+                                        }
+                                    }
+                                },
+                                "ATTR_0": {
+                                    "block": {
+                                        "type": "text",
+                                        "id": "Cz{z+y0lAI!2885jIRuM",
+                                        "fields": {
+                                            "TEXT": "color: #fff;"
+                                        }
+                                    }
+                                },
+                                "CHILD_0": {
+                                    "block": {
+                                        "type": "element_block",
+                                        "id": "Y0J(kyU4.eecEG!knA~{",
+                                        "extraState": {
+                                            "attributes": [],
+                                            "children": 1
+                                        },
+                                        "inputs": {
+                                            "TAG": {
+                                                "block": {
+                                                    "type": "text",
+                                                    "id": ",Lm6w-xZpJ3JX+@$_[|K",
+                                                    "fields": {
+                                                        "TEXT": "h1"
+                                                    }
+                                                }
+                                            },
+                                            "CHILD_0": {
+                                                "block": {
+                                                    "type": "text",
+                                                    "id": "f_.P2us)_]u[w!4BUf%Y",
+                                                    "fields": {
+                                                        "TEXT": "Hello, World!"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "CHILD_1": {
+                                    "block": {
+                                        "type": "element_block",
+                                        "id": "BW$E*i$Iw8vR|4PW:#VT",
+                                        "extraState": {
+                                            "attributes": [],
+                                            "children": 1
+                                        },
+                                        "inputs": {
+                                            "TAG": {
+                                                "block": {
+                                                    "type": "text",
+                                                    "id": "In6,S=i{8jwClCW3knKY",
+                                                    "fields": {
+                                                        "TEXT": "p"
+                                                    }
+                                                }
+                                            },
+                                            "CHILD_0": {
+                                                "block": {
+                                                    "type": "text",
+                                                    "id": "b|[;FvdN5c0KuDY+_AwA",
+                                                    "fields": {
+                                                        "TEXT": "This is a template for creating an Anura Tadpole app with blockly."
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "type": "export_function_block",
+                "id": "T*A5%HvdNrAvg~NNNOAn",
+                "x": 111,
+                "y": 541,
+                "fields": {
+                    "EXPORT_DEFAULT": true
+                },
+                "inputs": {
+                    "FUNC_NAME": {
+                        "block": {
+                            "type": "procedures_ref",
+                            "id": "r+S2;`=@HauAi/?.B~wp",
+                            "fields": {
+                                "FUNC_NAME": "AppBlock"
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

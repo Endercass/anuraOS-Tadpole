@@ -131,28 +131,29 @@ function App() {
 
           <category name="Variables" colour="330" custom="VARIABLE"></category>
 
-          <category name="Functions" colour="290" custom="PROCEDURE">
-            <block type="procedures_defnoreturn"></block>
-            <block type="procedures_defreturn"></block>
-            <block type="procedures_ifreturn"></block>
-            <block type="procedures_callnoreturn"></block>
-            <block type="procedures_callreturn"></block>
-          </category>
+          <category
+            name="Functions"
+            colour="290"
+            custom="DL_PROCEDURE"
+          ></category>
 
           <category name="UI" colour="120">
-            <block type="element_block"></block>
-            <block type="component_function_ref"></block>
-            <block type="text"></block>
-            <block type="text_join">
-              <mutation items="2"></mutation>
-            </block>
-            <block type="lists_create_with">
-              <mutation items="3"></mutation>
+            <block type="element_block">
+              <value name="TAG">
+                <block type="text">
+                  <field name="TEXT">div</field>
+                </block>
+              </value>
             </block>
           </category>
           <category name="Modules" colour="290">
             <block type="export_var_block"></block>
             <block type="export_const_block"></block>
+            <block type="export_function_block">
+              <value name="FUNC_NAME">
+                <block type="procedures_ref"></block>
+              </value>
+            </block>
           </category>
         </BlocklyComponent>
       </div>

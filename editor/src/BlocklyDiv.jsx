@@ -3,6 +3,8 @@ import { javascriptGenerator } from "blockly/javascript";
 import * as En from "blockly/msg/en";
 import "blockly/blocks";
 
+import { proceduresCategory } from "../../dreamland-blocks";
+
 export default function BlocklyComponent() {
   this.css = `
 height: 100%;
@@ -38,6 +40,11 @@ width: 100%;
       window.workspace = this.workspace;
       window.Blockly = Blockly;
       Blockly.svgResize(this.workspace);
+
+      this.workspace.registerToolboxCategoryCallback(
+        "DL_PROCEDURE",
+        proceduresCategory,
+      );
 
       this.workspace.addChangeListener((e) => {
         if (

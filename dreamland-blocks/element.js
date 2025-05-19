@@ -6,15 +6,15 @@ export const elementBlock = {
     this.attributes = [];
     this.children = [];
     this.appendValueInput("TAG")
-      .setCheck(["String", "ComponentFunction"])
+      .setCheck(["String", "Function"])
       .appendField("Element with tag");
     this.updateShape();
     this.setOutput(true, "HTMLElement");
     this.setMutator(
       new Blockly.icons.MutatorIcon(
         ["element_attribute_item", "element_child_item"],
-        this
-      )
+        this,
+      ),
     );
     this.setColour(225);
   },
