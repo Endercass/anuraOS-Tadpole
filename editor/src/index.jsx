@@ -154,6 +154,13 @@ function App() {
                 <block type="procedures_ref"></block>
               </value>
             </block>
+            <block type="import_named_component_block">
+              <value name="IMPORT_NAME">
+                <block type="text">
+                  <field name="TEXT">Component</field>
+                </block>
+              </value>
+            </block>
           </category>
         </BlocklyComponent>
       </div>

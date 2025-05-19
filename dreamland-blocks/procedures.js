@@ -1,6 +1,20 @@
 import * as Blockly from "blockly/core";
 import { javascriptGenerator, Order } from "blockly/javascript";
 
+export const normalizeName = (block, name) => {
+  const legalName = block
+    ? Blockly.Procedures.findLegalName(name, block)
+    : procName;
+
+  if (!javascriptGenerator.nameDB_) {
+    javascriptGenerator.nameDB_ = new Blockly.Names(
+      javascriptGenerator.RESERVED_WORDS_,
+    );
+  }
+
+  return javascriptGenerator.nameDB_.safeName(legalName);
+};
+
 export class FieldFunctionDropdown extends Blockly.FieldDropdown {
   constructor(workspace) {
     super(() => {
@@ -11,6 +25,17 @@ export class FieldFunctionDropdown extends Blockly.FieldDropdown {
       const allProcedures = proceduresNoReturn.concat(proceduresWithReturn);
 
       const blocks = workspace.getAllBlocks(false);
+
+      const namedImports = blocks
+        .map((b) => {
+          if (!b?.getFieldValue) return false;
+          if (b.type !== "import_named_component_block") return false;
+          return [
+            b.getFieldValue("IMPORT_NAME"),
+            normalizeName(b, b.getFieldValue("IMPORT_NAME")),
+          ];
+        })
+        .filter(Boolean);
 
       const options = allProcedures.map(([procName]) => {
         const procBlock = blocks.find((b) => {
@@ -23,20 +48,10 @@ export class FieldFunctionDropdown extends Blockly.FieldDropdown {
           return b.getFieldValue("NAME") === procName;
         });
 
-        const legalName = procBlock
-          ? Blockly.Procedures.findLegalName(procName, procBlock)
-          : procName;
-
-        if (!javascriptGenerator.nameDB_) {
-          javascriptGenerator.nameDB_ = new Blockly.Names(
-            javascriptGenerator.RESERVED_WORDS_,
-          );
-        }
-
-        const safeName = javascriptGenerator.nameDB_.safeName(legalName);
-
-        return [procName, safeName]; // show original name, store sanitized safe name
+        return [procName, normalizeName(procBlock, procName)];
       });
+
+      options.push(...namedImports);
 
       return options.length > 0 ? options : [["<no functions>", ""]];
     });
