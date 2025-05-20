@@ -16,70 +16,37 @@ class ComponentLoader {
       }
     } catch (_) {
       console.info(
-        "[INFO] <tadpole-rt> No code components found. This can be ignored if this is a block-only app."
+        "[INFO] <tadpole-rt> No code components found. This can be ignored if this is a block-only app.",
       );
       return;
     }
 
     for (const load of this.loads) {
       if (load.path.endsWith(".js")) {
-        try {
-          const mod = await import(
-            new URL(`./src/components/${load.path}`, import.meta.url)
-          );
-
-          if (mod.default) {
-            load.name =
-              mod.name || mod.default.name || load.path.replace(/\.jsx?$/, "");
-            load.component = mod.default;
-
-            registerComponent(load.name, load.component);
-          } else {
-            console.warn(
-              `[WARNING] <tadpole-rt> Component ${load.path} does not export a default component. It will not be registered.`
-            );
-          }
-        } catch (e) {
-          console.error(
-            `[ERROR] <tadpole-rt> Failed to load component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`
-          );
-          load.error = e;
-        }
+        const url = new URL(`./src/components/${load.path}`, import.meta.url);
+        this.importModule(url, load);
       } else if (load.path.endsWith(".jsx")) {
         try {
           const code = (
             await anura.fs.promises.readFile(
-              basepath + "/src/components/" + load.path
+              basepath + "/src/components/" + load.path,
             )
           ).toString();
 
           const compiled = await compile(code);
-
-          const url = URL.createObjectURL(
-            new Blob([compiled], { type: "application/javascript" })
+          const blobUrl = URL.createObjectURL(
+            new Blob([compiled], { type: "application/javascript" }),
           );
 
-          const mod = await import(url);
-          URL.revokeObjectURL(url);
-
-          if (mod.default) {
-            load.name =
-              mod.name || mod.default.name || load.path.replace(/\.jsx?$/, "");
-            load.component = mod.default;
-
-            registerComponent(load.name, load.component);
-          } else {
-            console.warn(
-              `[WARNING] <tadpole-rt> Component ${load.path} does not export a default component. It will not be registered.`
-            );
-          }
+          this.importModule(blobUrl, load, true);
         } catch (e) {
           console.error(
-            `[ERROR] <tadpole-rt> Failed to load component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`
+            `[ERROR] <tadpole-rt> Failed to compile component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`,
           );
           load.error = e;
         }
       }
+
       for (const mod of modules) {
         if (
           mod.extensions &&
@@ -89,7 +56,7 @@ class ComponentLoader {
             await mod.handle(basepath, load);
           } catch (e) {
             console.error(
-              `[ERROR] <tadpole-rt> Failed to load component ${load.name} with extension ${mod.path}: ${e}\nThis is not a fatal error, but the component will not be available.`
+              `[ERROR] <tadpole-rt> Failed to load component ${load.name} with extension ${mod.path}: ${e}\nThis is not a fatal error, but the component will not be available.`,
             );
             load.error = e;
           }
@@ -97,7 +64,34 @@ class ComponentLoader {
       }
     }
   }
+
+  importModule(url, load, isBlob = false) {
+    import(url)
+      .then((mod) => {
+        if (isBlob) URL.revokeObjectURL(url);
+        this.handleModuleImport(load, mod);
+      })
+      .catch((e) => {
+        if (isBlob) URL.revokeObjectURL(url);
+        console.error(
+          `[ERROR] <tadpole-rt> Failed to load component ${load.path}: ${e}\nThis is not a fatal error, but the component will not be available.`,
+        );
+        load.error = e;
+      });
+  }
+
+  handleModuleImport(load, mod) {
+    if (mod.default) {
+      load.name =
+        mod.name || mod.default.name || load.path.replace(/\.jsx?$/, "");
+      load.component = mod.default;
+      registerComponent(load.name, load.component);
+    } else {
+      console.warn(
+        `[WARNING] <tadpole-rt> Component ${load.path} does not export a default component. It will not be registered.`,
+      );
+    }
+  }
 }
 
-const loader = new ComponentLoader();
-export { loader as componentLoader };
+export const componentLoader = new ComponentLoader();

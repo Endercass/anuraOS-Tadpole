@@ -145,6 +145,15 @@ function App() {
                 </block>
               </value>
             </block>
+            <block type="attribute_reference_block">
+              <value name="NAME">
+                <block type="text">
+                  <field name="TEXT">class</field>
+                </block>
+              </value>
+            </block>
+            <block type="deref_block"></block>
+            <block type="use_block"></block>
           </category>
           <category name="Modules" colour="290">
             <block type="export_var_block"></block>
