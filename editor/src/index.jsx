@@ -6,6 +6,22 @@ import { defs, js } from "../../dreamland-blocks/index";
 Blockly.common.defineBlocks(defs);
 Object.assign(javascriptGenerator.forBlock, js);
 
+const url = new URL(window.location.href);
+const argv = ExternalApp.deserializeArgs(url.searchParams.get("args"));
+
+let preload = null;
+
+if (argv?.[0]?.startsWith("/")) {
+  try {
+    const data = await anura.fs.promises.readFile(argv[0]);
+    preload = JSON.parse(data.toString());
+  } catch (e) {
+    console.error(
+      `[ERROR] <tadpole-rt> Failed to preload workspace: ${e}\nThis is not a fatal error, but the workspace will be empty.`,
+    );
+  }
+}
+
 function App() {
   this.css = `
     display: flex;
@@ -30,6 +46,7 @@ function App() {
     <div>
       <div class="blockly-panel">
         <BlocklyComponent
+          preload={preload}
           onCodeChange={(code) => {
             console.log(code);
             const previewCode = document.querySelector(".preview-code");

@@ -56,6 +56,10 @@ width: 100%;
         }
         this.onCodeChange(javascriptGenerator.workspaceToCode(this.workspace));
       });
+
+      if (this.preload) {
+        Blockly.serialization.workspaces.load(this.preload, this.workspace);
+      }
     });
   };
 
