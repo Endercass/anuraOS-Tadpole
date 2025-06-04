@@ -3,7 +3,7 @@ import { javascriptGenerator } from "blockly/javascript";
 import * as En from "blockly/msg/en";
 import "blockly/blocks";
 
-export default function BlocklyComponent() {
+export default function BlocklyDiv() {
   this.css = `
 height: 100%;
 width: 100%;
