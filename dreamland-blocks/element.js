@@ -6,17 +6,17 @@ export const elementBlock = {
     this.attributes = [];
     this.children = [];
     this.appendValueInput("TAG")
-      .setCheck(["String", "ComponentFunction"])
+      .setCheck(["String", "Function"])
       .appendField("Element with tag");
     this.updateShape();
     this.setOutput(true, "HTMLElement");
     this.setMutator(
       new Blockly.icons.MutatorIcon(
         ["element_attribute_item", "element_child_item"],
-        this
-      )
+        this,
+      ),
     );
-    this.setColour(225);
+    this.setColour(120);
   },
 
   saveExtraState: function () {
@@ -137,22 +137,20 @@ export const elementBlock = {
 
     // re-add attribute inputs
     this.attributes.forEach((name, idx) => {
-      const inp = this.appendValueInput("ATTR_" + idx).setCheck("String");
+      const inp = this.appendValueInput("ATTR_" + idx);
       inp.appendField(name);
     });
 
     // re-add child inputs
     this.children.forEach((_, idx) => {
-      this.appendValueInput("CHILD_" + idx)
-        .setCheck(["String", "HTMLElement"])
-        .appendField("child");
+      this.appendValueInput("CHILD_" + idx).appendField("child");
     });
   },
 };
 
 export const elementContainerBlock = {
   init: function () {
-    this.setColour(225);
+    this.setColour(120);
     this.appendDummyInput("TAGLINE")
       .appendField("Element with tag")
       .appendField(new Blockly.FieldLabelSerializable(""), "TAGNAME");
@@ -165,7 +163,7 @@ export const elementContainerBlock = {
 
 export const elementAttributeItemBlock = {
   init: function () {
-    this.setColour(225);
+    this.setColour(120);
     this.appendDummyInput()
       .appendField("Attribute")
       .appendField(new Blockly.FieldTextInput("name"), "NAME");
@@ -178,7 +176,7 @@ export const elementAttributeItemBlock = {
 
 export const elementChildItemBlock = {
   init: function () {
-    this.setColour(225);
+    this.setColour(120);
     this.appendDummyInput().appendField("Child");
     // this.valueConnection_ will hold the connected child's connection
     this.setPreviousStatement(true, null);

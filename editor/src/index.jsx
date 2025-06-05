@@ -8,6 +8,15 @@ import ControlsView from "./views/ControlsView";
 Blockly.common.defineBlocks(defs);
 Object.assign(javascriptGenerator.forBlock, js);
 
+const url = new URL(window.location.href);
+const argv = ExternalApp.deserializeArgs(url.searchParams.get("args"));
+
+let preload = null;
+
+if (argv?.[0]?.startsWith("/")) {
+  preload = argv[0];
+}
+
 function viewToName(view) {
   switch (view) {
     case "editor":
@@ -27,8 +36,9 @@ function App() {
     max-width: 100vw;
     height: 100vh;
     `;
+
   this.view ??= "controls";
-  this.openedFolder ??= null;
+  this.openedFolder ??= preload;
 
   return (
     <div>

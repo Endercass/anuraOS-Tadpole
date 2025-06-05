@@ -1,4 +1,4 @@
-import BlocklyDiv from "../components/BlocklyDiv";
+import BlocklyDiv from "../components/BlocklyComponent";
 
 export default function EditorView() {
   this.css = `

@@ -10,7 +10,7 @@
     "height": "600px"
   },
   "x-anura.tadpole": {
-    "entrypoint": "AppCompiled",
+    "entrypoint": "App",
     "blocks-enabled": true
   }
 }

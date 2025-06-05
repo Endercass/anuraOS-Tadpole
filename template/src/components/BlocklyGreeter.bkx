@@ -1,0 +1,161 @@
+{
+  "blocks": {
+    "languageVersion": 0,
+    "blocks": [
+      {
+        "type": "procedures_defreturn",
+        "id": "^xBOEUu3HF}=Qg,?]C$`",
+        "x": -8,
+        "y": 40,
+        "icons": {
+          "comment": {
+            "text": "Describe this function...",
+            "pinned": false,
+            "height": 80,
+            "width": 160
+          }
+        },
+        "fields": {
+          "NAME": "BlocklyGreeter"
+        },
+        "inputs": {
+          "RETURN": {
+            "block": {
+              "type": "element_block",
+              "id": "@E3+4gz`m%`0G3bd|Qu;",
+              "extraState": {
+                "attributes": [],
+                "children": 2
+              },
+              "inputs": {
+                "TAG": {
+                  "block": {
+                    "type": "text",
+                    "id": "^`xEOVg~^JS8-rfTJiTg",
+                    "fields": {
+                      "TEXT": "div"
+                    }
+                  }
+                },
+                "CHILD_0": {
+                  "block": {
+                    "type": "element_block",
+                    "id": "UwC-wZ!?OQE~pYgH~e?-",
+                    "extraState": {
+                      "attributes": [],
+                      "children": 1
+                    },
+                    "inputs": {
+                      "TAG": {
+                        "block": {
+                          "type": "text",
+                          "id": "Y7}._Jgr8wCQR$SU-+S=",
+                          "fields": {
+                            "TEXT": "h2"
+                          }
+                        }
+                      },
+                      "CHILD_0": {
+                        "block": {
+                          "type": "text",
+                          "id": "+R`(9)-XtnLi$_|Jm%N)",
+                          "fields": {
+                            "TEXT": "Blockly Greeter"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "CHILD_1": {
+                  "block": {
+                    "type": "element_block",
+                    "id": "W}z(9.~$2k9-=X;eyj0~",
+                    "extraState": {
+                      "attributes": [],
+                      "children": 3
+                    },
+                    "inputs": {
+                      "TAG": {
+                        "block": {
+                          "type": "text",
+                          "id": "fdoXRpL[/4YZpP/+0P4y",
+                          "fields": {
+                            "TEXT": "p"
+                          }
+                        }
+                      },
+                      "CHILD_0": {
+                        "block": {
+                          "type": "text",
+                          "id": "goq#1S|`TUd1arXEeuEQ",
+                          "fields": {
+                            "TEXT": "Hello, "
+                          }
+                        }
+                      },
+                      "CHILD_1": {
+                        "block": {
+                          "type": "use_block",
+                          "id": "t{h3xIyeJt,[VHlNQw3=",
+                          "inputs": {
+                            "REF": {
+                              "block": {
+                                "type": "attribute_reference_block",
+                                "id": "}rc:/5yv}:{4S1rK4V/Y",
+                                "inputs": {
+                                  "NAME": {
+                                    "block": {
+                                      "type": "text",
+                                      "id": "X7;0|=PfdM63Jl|OM-f.",
+                                      "fields": {
+                                        "TEXT": "name"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "CHILD_2": {
+                        "block": {
+                          "type": "text",
+                          "id": "i]]vg-J8I2f2G`0X$g61",
+                          "fields": {
+                            "TEXT": "!"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "type": "export_function_block",
+        "id": "IuB|IyQLmkoUL`Qsh~jA",
+        "x": -1,
+        "y": 578,
+        "fields": {
+          "EXPORT_DEFAULT": true
+        },
+        "inputs": {
+          "FUNC_NAME": {
+            "block": {
+              "type": "procedures_ref",
+              "id": "GiYZ)7OFdLNVx/YKnqO/",
+              "fields": {
+                "FUNC_NAME": "BlocklyGreeter"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
