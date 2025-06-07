@@ -50,7 +50,7 @@ function App() {
       {use(this.view, (view) => {
         switch (view) {
           case "editor":
-            return <EditorView />;
+            return <EditorView bind:openedFolder={use(this.openedFolder)} />;
           case "controls":
             return <ControlsView bind:openedFolder={use(this.openedFolder)} />;
           default:

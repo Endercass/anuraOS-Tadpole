@@ -7,16 +7,28 @@ import { proceduresCategory } from "../../../dreamland-blocks";
 
 export default function BlocklyComponent() {
   this.css = `
-height: 100%;
-width: 100%;
-
-.blocklyDiv {
   height: 100%;
   width: 100%;
-  overflow: hidden;
-}`;
+
+  .blocklyDiv {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background: #ffffff;
+  }
+
+  .blocklyMainBackground {
+    stroke: none !important;
+  }
+`;
 
   this.onCodeChange ||= () => {};
+  this.setWorkspace = (workspace) => {
+    Blockly.serialization.workspaces.load(workspace, this.workspace);
+  };
 
   this.options = {
     renderer: "zelos",
@@ -43,7 +55,7 @@ width: 100%;
 
       this.workspace.registerToolboxCategoryCallback(
         "DL_PROCEDURE",
-        proceduresCategory
+        proceduresCategory,
       );
 
       this.workspace.addChangeListener((e) => {

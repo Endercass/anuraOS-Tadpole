@@ -1,32 +1,59 @@
 import BlocklyDiv from "../components/BlocklyComponent";
+import FileTree from "../components/FileTree";
+
+const PANEL_WIDTH_PERCENT = 35;
 
 export default function EditorView() {
   this.css = `
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  background: #f0f0f0;
+  flex-grow: 1;
+  color: #474747;
+  padding: 12px;
+  padding-top: 0;
+  gap: 12px;
+
+  .blockly-panel {
+    flex-basis: ${100 - PANEL_WIDTH_PERCENT}%;
+    height: 100%;
+    background: #f0f0f0;
+    box-sizing: border-box;
+  }
+
+  .preview-panel {
+    flex-basis: ${PANEL_WIDTH_PERCENT}%;
+    height: 100%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .preview-frame {
+    flex-grow: 1;
+    border: 1px solid #d0d0d0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 12px;
+    background: white;
     width: 100%;
     height: auto;
-    flex-grow: 1;
-  
-    .blockly-panel {
-        flex-basis: 100%;
-        height: 100%;
-        min-width: 600px;
-    }
-
-    .preview-panel {
-        height: 100%;
-    }
+  }
 `;
+
+  this.openedFolder ??= null;
+  this.frameBlob ??= null;
+
   return (
     <main>
       <div class="blockly-panel">
         <BlocklyDiv
           onCodeChange={(code) => {
             console.log(code);
-            const previewCode = document.querySelector(".preview-code");
-            previewCode.textContent = code;
           }}
+          bind:setWorkspace={use(this.setWorkspace)}
         >
           <category name="Logic" colour="210">
             <block type="controls_if"></block>
@@ -149,8 +176,42 @@ export default function EditorView() {
         </BlocklyDiv>
       </div>
       <div class="preview-panel" style="color: #fff;">
-        <iframe src="about:blank" />
-        <pre class="preview-code"></pre>
+        <iframe
+          class="preview-frame"
+          bind:this={use(this.previewFrame)}
+        ></iframe>
+        <FileTree
+          bind:openedFolder={use(this.openedFolder)}
+          onNavigate={async (path) => {
+            if (path.endsWith(".bkx")) {
+              console.log("Should load blocks from:", path);
+              try {
+                const data = JSON.parse(
+                  (await anura.fs.promises.readFile(path)).toString(),
+                );
+
+                console.log("Loaded blocks data:", data);
+
+                this.setWorkspace(data);
+              } catch (error) {
+                console.error("Error reading file:", error);
+                anura.dialog.alert(
+                  "Failed to read the file. Please check the console for details.",
+                  "Tadpole Editor",
+                );
+              }
+            } else {
+              if (
+                await anura.dialog.confirm(
+                  "Are you sure you want to open this file in the native file system?",
+                  "Tadpole Editor",
+                )
+              ) {
+                anura.files.open(path);
+              }
+            }
+          }}
+        />
       </div>
     </main>
   );

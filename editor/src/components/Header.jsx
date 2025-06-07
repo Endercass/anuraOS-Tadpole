@@ -1,6 +1,7 @@
 export default function Header() {
   this.css = `
         display: flex;
+        flex-shrink: 0;
         height: 48px;
         width: 100%;
         flex-direction: row;
@@ -69,7 +70,7 @@ export default function Header() {
           })}
         </button>
         <h1>{use`Dreamland Blocks Editor${use(this.pageName, (name) =>
-          name === "" ? name : " | " + name
+          name === "" ? name : " | " + name,
         )}`}</h1>
       </div>
     </header>
